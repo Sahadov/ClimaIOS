@@ -13,7 +13,33 @@ struct WeatherManager {
    
     func fetchWeather(cityName: String) {
         let urlString = "\(weatherURL)&q=\(cityName)"
-        print(urlString)
+        performWeatherRequest(urlString: urlString)
     }
     
+    func performWeatherRequest(urlString: String){
+        // 1. Create a url
+        if let url = URL(string: urlString) {
+            
+            // 2. Create a URLsession
+            let session = URLSession(configuration: .default)
+            
+            // 3. Give the session a task
+            let task = session.dataTask(with: url) { data, response, error in
+                if error != nil {
+                    print(error!)
+                    return
+                }
+                if let safeData = data {
+                    self.parseJSON(weatherData: safeData)
+                }
+            }
+            
+            // 4. Start the task
+            task.resume()
+        }
+    }
+    
+    func parseJSON(weatherData: Data) {
+        
+    }
 }
