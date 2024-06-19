@@ -43,7 +43,7 @@ struct WeatherManager {
         let decoder = JSONDecoder()
         do {
             let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
-            print(decodedData.name)
+            print(decodedData.weather[0].description)
         } catch {
             print(error)
         }
