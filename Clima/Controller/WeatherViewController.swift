@@ -8,13 +8,12 @@
 
 import UIKit
 
-class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManagerDelegate {
+class WeatherViewController: UIViewController {
     
     @IBOutlet weak var conditionImageView: UIImageView!
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var searchTextField: UITextField!
-    
     
     var weatherManager = WeatherManager()
     
@@ -24,7 +23,12 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
         searchTextField.delegate = self
         weatherManager.delegate = self
     }
+}
 
+
+// MARK: - UITextField
+extension WeatherViewController: UITextFieldDelegate {
+    
     @IBAction func serchPressed(_ sender: UIButton) {
         // закрывает клавиатуру
         searchTextField.endEditing(true)
@@ -53,15 +57,21 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
         }
         searchTextField.text = ""
     }
-    
+}
+
+// MARK: - WeatherManagerDelegate
+extension WeatherViewController: WeatherManagerDelegate {
     
     func didUpdateWeather(_ weatherManager: WeatherManager, weather: WeatherModel) {
-        print(weather.temperature)
-        
+        DispatchQueue.main.async {
+            self.temperatureLabel.text = weather.temperatureString
+            self.conditionImageView.image = UIImage(systemName: weather.conditionName)
+            self.cityLabel.text = weather.cityName
+            
+        }
     }
     
     func didFailWithError(error: Error) {
         print(error)
     }
 }
-
